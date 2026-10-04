@@ -27,10 +27,16 @@ jobs:
       - run: npm run check
       - run: npx tsc --noEmit
       - name: Bump package version when the current version is already published
+        id: version
         shell: bash
         run: |
           published="$(npm view vedastro version 2>/dev/null || true)"
           current="$(node -p "require('./package.json').version")"
+          if [ -z "$published" ]; then
+            echo "publish_ready=false" >> "$GITHUB_OUTPUT"
+            echo "vedastro is not published yet; build checks passed, but the first release needs an npm account publish."
+            exit 0
+          fi
           if [ "$published" = "$current" ]; then
             npm version patch --no-git-tag-version
             git config user.name 'github-actions[bot]'
@@ -39,4 +45,6 @@ jobs:
             git commit -m "chore: bump npm package version"
             git push
           fi
-      - run: npm publish --provenance --access public
+          echo "publish_ready=true" >> "$GITHUB_OUTPUT"
+      - if: steps.version.outputs.publish_ready == 'true'
+        run: npm publish --provenance --access public
