@@ -1,6 +1,6 @@
 {
   "name": "vedastro",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Official Node.js and TypeScript client for the VedAstro Vedic astrology API",
   "license": "MIT",
   "publishConfig": {
