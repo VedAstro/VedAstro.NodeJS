@@ -1,15 +1,24 @@
 {
   "name": "vedastro",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official Node.js and TypeScript client for the VedAstro Vedic astrology API",
   "license": "MIT",
-  "publishConfig": { "access": "public", "provenance": true },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/VedAstro/VedAstro.NodeJS.git"
   },
   "homepage": "https://vedastro.org",
-  "keywords": ["vedic-astrology", "astrology", "api", "jyotish", "typescript"],
+  "keywords": [
+    "vedic-astrology",
+    "astrology",
+    "api",
+    "jyotish",
+    "typescript"
+  ],
   "main": "index.cjs",
   "module": "index.mjs",
   "types": "index.d.ts",
@@ -20,8 +29,19 @@
       "require": "./index.cjs"
     }
   },
-  "files": ["index.cjs", "index.mjs", "index.d.ts", "client.cjs", "types.d.ts", "src/generated", "README.md", "LICENSE"],
-  "engines": { "node": ">=22" },
+  "files": [
+    "index.cjs",
+    "index.mjs",
+    "index.d.ts",
+    "client.cjs",
+    "types.d.ts",
+    "src/generated",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "node scripts/build.cjs",
     "check": "node scripts/check.cjs",
