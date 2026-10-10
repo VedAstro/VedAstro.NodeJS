@@ -623,6 +623,31 @@ Failures reject the Promise with an `Error` whose message includes the HTTP stat
 
 ---
 
+### Q: "Is there a request timeout?"
+
+**A:** No, and that is deliberate. A VedAstro calculation can take milliseconds or minutes depending
+on the endpoint and the load on the service, and this library has no way to know what is acceptable
+for your workload. A built-in deadline would be exactly the kind of brittle logic that silently
+truncates a valid answer, so **none is applied**. If a call is still pending, it is still working.
+
+When you want a deadline — because your own request or job budget demands one — set it explicitly:
+
+```js
+const { Calculate } = require('vedastro');
+
+// Only because *you* decided 30 seconds is too long.
+Calculate.SetTimeout(30_000);
+console.log(Calculate.GetTimeout()); // 30000
+
+Calculate.SetTimeout(null);          // remove it again
+```
+
+`SetTimeout` takes milliseconds and rejects a non-positive value. This pairs naturally with
+`AbortSignal.timeout(...)` or your framework's own request deadline, which is usually the better
+place to express the limit.
+
+---
+
 ### Q: "What's the difference between longitude and degree?"
 
 **A:**

@@ -7,7 +7,9 @@ Object.assign(Calculate, {
   SetAPIKey: client.SetAPIKey,
   SetAyanamsa: client.SetAyanamsa,
   GetAyanamsa: client.GetAyanamsa,
-  use_ayanamsa: client.use_ayanamsa
+  use_ayanamsa: client.use_ayanamsa,
+  SetTimeout: client.SetTimeout,
+  GetTimeout: client.GetTimeout
 });
 Object.defineProperty(Calculate, 'base_url', {
   get: () => client.base_url,

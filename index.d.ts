@@ -22,6 +22,14 @@ export declare const Calculate: typeof import('./src/generated/calculate').Calcu
   SetAyanamsa(ayanamsa: string | number | null): void;
   GetAyanamsa(): string | undefined;
   use_ayanamsa<T>(ayanamsa: string | number | null, callback: () => T): T;
+  /**
+   * Sets a deadline for each API call, in milliseconds. No deadline is applied by default: a
+   * calculation can take milliseconds or minutes, so a built-in limit would only ever truncate a
+   * valid answer. Pass null to remove it again.
+   */
+  SetTimeout(milliseconds: number | null): void;
+  /** The deadline in force, or null when calls may run as long as they need. */
+  GetTimeout(): number | null;
   base_url: string;
 };
 export declare const Tools: {

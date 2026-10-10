@@ -10,6 +10,9 @@ const ayanamsaContext = new AsyncLocalStorage();
 let apiKey;
 let defaultAyanamsa;
 let baseUrl = 'https://vedastro.zaishi.net/api/Calculate';
+// No request deadline unless the caller sets one. A VedAstro calculation can take milliseconds or
+// minutes, so a built-in deadline would be brittle logic that can truncate a valid answer.
+let requestTimeoutMs = null;
 const ayanamsaNames = new Set(Object.keys(enums.Ayanamsa || {}).map(name => name.toLowerCase()));
 
 function enumName(value) {
@@ -50,8 +53,12 @@ async function request(endpoint, args) {
   const ayanamsa = ayanamsaContext.getStore() ?? defaultAyanamsa;
   if (ayanamsa) params.Ayanamsa = ayanamsa;
 
+  // Only arm an abort timer when the caller asked for a deadline. With none set, the request waits
+  // for the service however long it legitimately takes.
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 120_000);
+  const abortTimer = requestTimeoutMs === null
+    ? null
+    : setTimeout(() => controller.abort(), requestTimeoutMs);
   try {
     const response = await fetch(`${baseUrl.replace(/\/$/, '')}/${encodeURIComponent(endpoint)}`, {
       method: 'POST',
@@ -73,10 +80,12 @@ async function request(endpoint, args) {
     const keys = Object.keys(payload);
     return keys.length === 1 ? payload[keys[0]] : payload;
   } catch (error) {
-    if (error?.name === 'AbortError') throw new Error('VedAstro API request timed out after 120 seconds');
+    if (error?.name === 'AbortError') {
+      throw new Error(`VedAstro API request timed out after ${requestTimeoutMs} ms`);
+    }
     throw error;
   } finally {
-    clearTimeout(timeout);
+    if (abortTimer !== null) clearTimeout(abortTimer);
   }
 }
 
@@ -134,6 +143,26 @@ const client = {
     if (typeof callback !== 'function') throw new TypeError('use_ayanamsa requires an async callback');
     return ayanamsaContext.run(validateAyanamsa(value), callback);
   },
+  /**
+   * Sets a deadline for each API call, in milliseconds.
+   *
+   * No deadline is applied by default, and that is deliberate: a VedAstro calculation can take
+   * milliseconds or minutes, and this library cannot know what is acceptable for your workload, so
+   * a built-in limit would only ever truncate a valid answer. Set one only when your own code has
+   * decided a request has run too long. Pass null to remove it again.
+   */
+  SetTimeout(milliseconds) {
+    if (milliseconds === null || milliseconds === undefined) {
+      requestTimeoutMs = null;
+      return;
+    }
+    if (!Number.isFinite(milliseconds) || milliseconds <= 0) {
+      throw new RangeError('vedastro: timeout must be a positive number of milliseconds');
+    }
+    requestTimeoutMs = milliseconds;
+  },
+  /** The deadline in force, or null when calls are allowed to run as long as they need. */
+  GetTimeout() { return requestTimeoutMs; },
   get base_url() { return baseUrl; },
   set base_url(value) { baseUrl = String(value); }
 };
