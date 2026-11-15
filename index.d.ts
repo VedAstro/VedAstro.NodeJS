@@ -40,7 +40,7 @@ export declare function SetAyanamsa(ayanamsa: string | number | null): void;
 export declare function GetAyanamsa(): string | undefined;
 export declare function use_ayanamsa<T>(ayanamsa: string | number | null, callback: () => T): T;
 export { PlanetName, HouseName, ZodiacName, ChartType, DayOfWeek, ConstellationName, Avasta,
-  Ayanamsa, Karana, LunarDayGroup, LunarMonth } from './src/generated/enums.js';
+  Ayanamsa, Karana, LunarDayGroup, LunarMonth, DasaSystem, DasaYearConvention } from './src/generated/enums.js';
 declare const _default: typeof import('./src/generated/enums.js') & {
   Calculate: typeof Calculate;
   GeoLocation: typeof GeoLocation;

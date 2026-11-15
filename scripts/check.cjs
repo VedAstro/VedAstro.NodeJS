@@ -33,6 +33,16 @@ async function checkTransport() {
   assert.deepEqual(bodies.map(body => body.Ayanamsa), ['Lahiri', 'Raman']);
   assert.equal(bodies[0].APIKey, 'test-key');
   assert.deepEqual(bodies[0].time, birth.toJSON());
+  assert.equal(sdk.DasaSystem.VimshottariJanma, 2);
+  
+  await Calculate.DasaForLife(birth, sdk.DasaSystem.VimshottariJanma, 2);
+  assert.equal(bodies[2].system, sdk.DasaSystem.VimshottariJanma);
+  assert.equal(bodies[2].depth, 2);
+  assert.equal('checkTimes' in bodies[2], false);
+  assert.equal('precisionHours' in bodies[2], false);
+  for (const name of ['DasaForNow', 'DasaAtRange', 'DasaAtTimes', 'DasaPeriodBoundaries', 'SpecialDasaAtTime']) {
+    assert.equal(name in Calculate, false, name);
+  }
   delete Calculate.base_url;
   delete require('../client.cjs').base_url;
   console.log('SDK smoke checks passed.');

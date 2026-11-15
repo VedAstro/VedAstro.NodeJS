@@ -244,20 +244,38 @@ Karana:    Vishti
 **Use Case:** Get planetary periods (Mahadasa → Bhukti → Antaram)
 
 ```js
-import { Calculate, Time, GeoLocation } from 'vedastro';
+/**
+ * DEMO: Vimshottari Dasa Timeline
+ * USE CASE: Planetary periods (Mahadasa -> Bhukti -> Antaram) over a date range
+ * DIFFICULTY: Intermediate
+ *
+ * RUN:
+ *   node demo_vimshottari_dasa.js
+ */
+import { Calculate, Time, GeoLocation, DasaType } from 'vedastro';
 
-Calculate.SetAPIKey('FreeAPIUser');
+try {
+  Calculate.SetAPIKey('FreeAPIUser');
 
-const mumbai = new GeoLocation('Mumbai', 72.8777, 19.0760);
-const birth = new Time('14:30 25/10/1992 +05:30', mumbai);
+  const mumbai = new GeoLocation('Mumbai', 72.8777, 19.0760);
+  const birth = new Time('14:30 25/10/1992 +05:30', mumbai);
 
-const start = new Time('00:00 01/01/2020 +05:30', mumbai);
-const end = new Time('23:59 31/12/2030 +05:30', mumbai);
+  const start = new Time('00:00 01/01/2020 +05:30', mumbai);
+  const end = new Time('23:59 31/12/2030 +05:30', mumbai);
 
-// levels = nesting depth, precisionHours = how finely to scan
-const dasa = await Calculate.DasaAtRange(birth, start, end, 3, 100);
+  // levels         = nesting depth (1 = Mahadasa, 2 = +Bhukti, 3 = +Antaram)
+  const dasa = await Calculate.DasaAtRange(birth, start, end, DasaType.VimshottariJanma, 3);
 
-console.log(JSON.stringify(dasa, null, 2));
+  console.log(JSON.stringify(dasa, null, 2));
+
+  // A single moment instead of a range:
+  //   await Calculate.DasaAtTime(birth, someTime, DasaType.VimshottariJanma, 3)
+  // The whole life span:
+  //   await Calculate.DasaForLife(birth, DasaType.VimshottariJanma, 120, 3)
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
 ```
 
 👉 **See full example:** [`demo_vimshottari_dasa.js`](demo_vimshottari_dasa.js)
@@ -786,7 +804,7 @@ Methods are grouped below by area. Every one of them is `async` and typed in [`s
 `SarvashtakavargaChart`, `BhinnashtakavargaChart`, `PlanetAshtakvargaBindu`, `GocharaKakshas`, `AshtakavargaLongevity`, `PrastaraAshtakavarga`, `SodyaAshtakavarga`, +13 more
 
 ### Dasa — planetary periods (20 methods)
-`DasaAtRange`, `DasaAtTime`, `DasaForNow`, `DasaForLife`, `MoolaDasa`, `NarayanaDasa`, `KalachakraDasa`, `TithiAshtottariDasa`, +12 more
+`DasaSystems`, `DasaAtTime`, `DasaForLife` (use the language-specific naming shown in the examples).
 
 ### Earthquake research (20 methods)
 `CalculateEarthquakeRiskScore`, `IsEarthquakeNearEclipse`, `IsEarthquakeJupiterSaturnConjunction`, `IsEarthquakePlanetsClusteredInNarrowArc`, +16 more

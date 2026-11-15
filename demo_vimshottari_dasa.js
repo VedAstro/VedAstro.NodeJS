@@ -6,7 +6,7 @@
  * RUN:
  *   node demo_vimshottari_dasa.js
  */
-import { Calculate, Time, GeoLocation } from 'vedastro';
+import { Calculate, Time, GeoLocation, DasaType } from 'vedastro';
 
 try {
   Calculate.SetAPIKey('FreeAPIUser');
@@ -18,15 +18,14 @@ try {
   const end = new Time('23:59 31/12/2030 +05:30', mumbai);
 
   // levels         = nesting depth (1 = Mahadasa, 2 = +Bhukti, 3 = +Antaram)
-  // precisionHours = scan resolution; larger is faster but coarser
-  const dasa = await Calculate.DasaAtRange(birth, start, end, 3, 100);
+  const dasa = await Calculate.DasaAtRange(birth, start, end, DasaType.VimshottariJanma, 3);
 
   console.log(JSON.stringify(dasa, null, 2));
 
   // A single moment instead of a range:
-  //   await Calculate.DasaAtTime(birth, someTime, 3)
+  //   await Calculate.DasaAtTime(birth, someTime, DasaType.VimshottariJanma, 3)
   // The whole life span:
-  //   await Calculate.DasaForLife(birth, 3, 100, 120)
+  //   await Calculate.DasaForLife(birth, DasaType.VimshottariJanma, 120, 3)
 } catch (error) {
   console.error(error.message);
   process.exitCode = 1;
