@@ -11,10 +11,6 @@ Object.assign(Calculate, {
   SetTimeout: client.SetTimeout,
   GetTimeout: client.GetTimeout
 });
-Object.defineProperty(Calculate, 'base_url', {
-  get: () => client.base_url,
-  set: value => { client.base_url = value; }
-});
 
 class GeoLocation {
   constructor(location_name, longitude, latitude) {

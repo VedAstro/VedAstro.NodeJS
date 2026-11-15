@@ -1,5 +1,5 @@
-import type { JsonValue } from './types';
-export { JsonPrimitive, JsonValue } from './types';
+import type { JsonValue } from './types.js';
+export { JsonPrimitive, JsonValue } from './types.js';
 
 export declare class GeoLocation {
   constructor(location_name: string, longitude: number, latitude: number);
@@ -17,7 +17,7 @@ export declare class Time {
   url_time_string(): string;
   toString(): string;
 }
-export declare const Calculate: typeof import('./src/generated/calculate').Calculate & {
+export declare const Calculate: typeof import('./src/generated/calculate.js').Calculate & {
   SetAPIKey(apiKey: string | null): void;
   SetAyanamsa(ayanamsa: string | number | null): void;
   GetAyanamsa(): string | undefined;
@@ -30,7 +30,6 @@ export declare const Calculate: typeof import('./src/generated/calculate').Calcu
   SetTimeout(milliseconds: number | null): void;
   /** The deadline in force, or null when calls may run as long as they need. */
   GetTimeout(): number | null;
-  base_url: string;
 };
 export declare const Tools: {
   Print(data: JsonValue): void;
@@ -41,6 +40,17 @@ export declare function SetAyanamsa(ayanamsa: string | number | null): void;
 export declare function GetAyanamsa(): string | undefined;
 export declare function use_ayanamsa<T>(ayanamsa: string | number | null, callback: () => T): T;
 export { PlanetName, HouseName, ZodiacName, ChartType, DayOfWeek, ConstellationName, Avasta,
-  Ayanamsa, Karana, LunarDayGroup, LunarMonth } from './src/generated/enums';
-declare const _default: typeof import('./index.cjs');
+  Ayanamsa, Karana, LunarDayGroup, LunarMonth } from './src/generated/enums.js';
+declare const _default: typeof import('./src/generated/enums.js') & {
+  Calculate: typeof Calculate;
+  GeoLocation: typeof GeoLocation;
+  Time: typeof Time;
+  Tools: typeof Tools;
+  SetAPIKey: typeof SetAPIKey;
+  SetAyanamsa: typeof SetAyanamsa;
+  GetAyanamsa: typeof GetAyanamsa;
+  use_ayanamsa: typeof use_ayanamsa;
+  SetTimeout: typeof Calculate.SetTimeout;
+  GetTimeout: typeof Calculate.GetTimeout;
+};
 export default _default;

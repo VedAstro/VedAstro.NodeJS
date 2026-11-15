@@ -14,8 +14,13 @@ assert.throws(() => Calculate.SetAyanamsa('unknown'), /Unknown ayanamsa/);
 assert.equal(typeof Calculate.PlanetRasiD1Sign, 'function');
 async function checkTransport() {
   Calculate.SetAPIKey('test-key');
+  assert.equal('base_url' in Calculate, false);
+  assert.equal('base_url' in require('../client.cjs'), false);
+  Calculate.base_url = 'https://example.invalid';
+  require('../client.cjs').base_url = 'https://example.invalid';
   const bodies = [];
   global.fetch = async (_url, options) => {
+    assert.ok(_url.startsWith('https://vedastro.zaishi.net/api/Calculate/'));
     bodies.push(JSON.parse(options.body));
     return Response.json({ Status: 'Success', Payload: { Result: 0 } });
   };
@@ -28,6 +33,8 @@ async function checkTransport() {
   assert.deepEqual(bodies.map(body => body.Ayanamsa), ['Lahiri', 'Raman']);
   assert.equal(bodies[0].APIKey, 'test-key');
   assert.deepEqual(bodies[0].time, birth.toJSON());
+  delete Calculate.base_url;
+  delete require('../client.cjs').base_url;
   console.log('SDK smoke checks passed.');
 }
 checkTransport().catch(error => { console.error(error); process.exitCode = 1; });

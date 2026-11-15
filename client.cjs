@@ -9,7 +9,7 @@ const enums = require('./src/generated/enums.cjs');
 const ayanamsaContext = new AsyncLocalStorage();
 let apiKey;
 let defaultAyanamsa;
-let baseUrl = 'https://vedastro.zaishi.net/api/Calculate';
+const baseUrl = 'https://vedastro.zaishi.net/api/Calculate';
 // No request deadline unless the caller sets one. A VedAstro calculation can take milliseconds or
 // minutes, so a built-in deadline would be brittle logic that can truncate a valid answer.
 let requestTimeoutMs = null;
@@ -162,9 +162,7 @@ const client = {
     requestTimeoutMs = milliseconds;
   },
   /** The deadline in force, or null when calls are allowed to run as long as they need. */
-  GetTimeout() { return requestTimeoutMs; },
-  get base_url() { return baseUrl; },
-  set base_url(value) { baseUrl = String(value); }
+  GetTimeout() { return requestTimeoutMs; }
 };
 
 if (process.stdout) process.stdout.write('VedAstro : Easy To Use Advanced Astrology Engine\n');
